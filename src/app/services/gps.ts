@@ -1,13 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
-import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GpsService {
-  private speedSubject = new BehaviorSubject<number>(0);
-  public speed$: Observable<number> = this.speedSubject.asObservable();
+  private speedSignal = signal<number>(0);
+  public readonly speed = this.speedSignal.asReadonly();
 
   private watchId: string | null = null;
 
@@ -28,9 +27,9 @@ export class GpsService {
         if (position && position.coords.speed !== null) {
           // speed is in m/s, convert to km/h
           const speedKmH = position.coords.speed * 3.6;
-          this.speedSubject.next(Math.round(speedKmH));
+          this.speedSignal.set(Math.round(speedKmH));
         } else {
-          this.speedSubject.next(0);
+          this.speedSignal.set(0);
         }
       }
     );

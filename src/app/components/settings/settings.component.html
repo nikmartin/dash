@@ -11,10 +11,11 @@
   <ion-list>
     <ion-item>
       <ion-label>
-        <h2>Use Imperial Units</h2>
+        <h2>Units</h2>
         <p>MPH, Fahrenheit</p>
       </ion-label>
-      <ion-toggle [checked]="useImperial$ | async" (ionChange)="toggleImperial($event)"></ion-toggle>
+      <ion-toggle [checked]="useImperial()" (ionChange)="toggleImperial($event)"></ion-toggle>
     </ion-item>
   </ion-list>
 </ion-content>
+

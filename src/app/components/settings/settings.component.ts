@@ -13,7 +13,7 @@ import { SettingsService } from '../../services/settings';
 })
 export class SettingsComponent {
   private settingsService = inject(SettingsService);
-  public useImperial$ = this.settingsService.useImperial$;
+  public useImperial = this.settingsService.useImperial;
 
   async toggleImperial(event: any) {
     await this.settingsService.setUseImperial(event.detail.checked);

@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BleClient, ScanResult } from '@capacitor-community/bluetooth-le';
-import { BehaviorSubject, Observable } from 'rxjs';
-
 export interface ObdData {
   rpm: number;
   waterTemp: number;
@@ -17,17 +15,16 @@ const ELM327_CHARACTERISTIC_UUID = '0000fff1-0000-1000-8000-00805f9b34fb';
   providedIn: 'root',
 })
 export class Obd2Service {
-  private dataSubject = new BehaviorSubject<ObdData>({
+  private dataSignal = signal<ObdData>({
     rpm: 0,
     waterTemp: 0,
     voltage: 0,
     oilPressure: 0,
   });
-  public data$: Observable<ObdData> = this.dataSubject.asObservable();
+  public readonly data = this.dataSignal.asReadonly();
 
-  private connectedSubject = new BehaviorSubject<boolean>(false);
-  public connected$: Observable<boolean> = this.connectedSubject.asObservable();
-
+  private connectedSignal = signal<boolean>(false);
+  public readonly connected = this.connectedSignal.asReadonly();
   private deviceId: string | null = null;
   private isPolling = false;
 
@@ -38,12 +35,12 @@ export class Obd2Service {
       await BleClient.initialize();
       await BleClient.connect(deviceId, (id) => this.onDisconnect(id));
       this.deviceId = deviceId;
-      this.connectedSubject.next(true);
+      this.connectedSignal.set(true);
       await this.initializeObd();
       this.startPolling();
     } catch (err) {
       console.error('Connection failed', err);
-      this.connectedSubject.next(false);
+      this.connectedSignal.set(false);
       this.deviceId = null;
       throw err;
     }
@@ -52,7 +49,7 @@ export class Obd2Service {
   private onDisconnect(deviceId: string) {
     console.log(`Device ${deviceId} disconnected`);
     this.deviceId = null;
-    this.connectedSubject.next(false);
+    this.connectedSignal.set(false);
     this.stopPolling();
   }
 
@@ -62,7 +59,7 @@ export class Obd2Service {
       await BleClient.disconnect(this.deviceId);
       this.deviceId = null;
     }
-    this.connectedSubject.next(false);
+    this.connectedSignal.set(false);
   }
 
   private async initializeObd() {
@@ -93,7 +90,7 @@ export class Obd2Service {
       const voltage = await this.getVoltage();
       const oilPressure = await this.getOilPressure();
 
-      this.dataSubject.next({
+      this.dataSignal.set({
         rpm,
         waterTemp,
         voltage,
@@ -186,3 +183,4 @@ export class Obd2Service {
     return devices;
   }
 }
+
