@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Dashboard</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="scan()" *ngIf="(isConnected$ | async) === false">
+        <ion-icon slot="icon-only" name="bluetooth-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="disconnect()" *ngIf="isConnected$ | async" color="success">
+        <ion-icon slot="icon-only" name="bluetooth"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="dashboard-container">
+    <div class="main-gauge">
+      <div class="value">{{ speed$ | async }}</div>
+      <div class="unit">km/h</div>
+    </div>
+
+    <div class="stats-grid" *ngIf="obdData$ | async as data">
+      <div class="stat-item">
+        <div class="label">RPM</div>
+        <div class="value">{{ data.rpm }}</div>
+      </div>
+      <div class="stat-item">
+        <div class="label">Water Temp</div>
+        <div class="value">{{ data.waterTemp }}°C</div>
+      </div>
+      <div class="stat-item">
+        <div class="label">Voltage</div>
+        <div class="value">{{ data.voltage }}V</div>
+      </div>
+      <div class="stat-item">
+        <div class="label">Oil Pressure</div>
+        <div class="value">{{ data.oilPressure | number:'1.0-1' }} PSI</div>
+      </div>
+    </div>
+
+    <div *ngIf="showDeviceList" class="device-list">
+      <ion-list>
+        <ion-item *ngFor="let result of devices" (click)="connect(result.device.deviceId)" button>
+          <ion-label>
+            <h2>{{ result.device.name || 'Unknown Device' }}</h2>
+            <p>{{ result.device.deviceId }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item (click)="showDeviceList = false" button color="light">
+          <ion-label>Cancel</ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+</ion-content>
