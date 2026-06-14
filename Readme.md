@@ -10,5 +10,5 @@ I use an old Android phone in a windshield mount as the display. The BLE dongle 
 My Kei truck is a Subaru Sambar. Subarus also uses a proprietary diagnostic protocol that is based on obd1. You can get Subaru to Obd2 protocol adapters on the jungle site for about $12. 
 
 
-## AI Fisclaimer 
+## AI Disclaimer 
 This project's main purpose was initially to test how robust Google's Gemini AI and Jules AI is, so I purposely vibe-coded most of it, and it has so far done a pretty good job. Compared to coPilot, Jules and Gemini don't try to do too much. copilot tries to make everything overly safe with every edge case covered, way too much setup and config code, and functions everywhere. Gemini has been straight and to the point in most of its implementations. 
