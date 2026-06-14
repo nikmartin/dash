@@ -16,10 +16,15 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="dashboard-container">
+  <div class="dashboard-container" *ngIf="{ useImperial: useImperial$ | async } as config">
     <div class="main-gauge">
-      <div class="value">{{ speed$ | async }}</div>
-      <div class="unit">km/h</div>
+      <div class="value">
+        <ng-container *ngIf="speed$ | async as speed; else zeroSpeed">
+          {{ config.useImperial ? (speed / 1.60934 | number:'1.0-0') : speed }}
+        </ng-container>
+        <ng-template #zeroSpeed>0</ng-template>
+      </div>
+      <div class="unit">{{ config.useImperial ? 'mph' : 'km/h' }}</div>
     </div>
 
     <div class="stats-grid" *ngIf="obdData$ | async as data">
@@ -29,7 +34,9 @@
       </div>
       <div class="stat-item">
         <div class="label">Water Temp</div>
-        <div class="value">{{ data.waterTemp }}°C</div>
+        <div class="value">
+          {{ config.useImperial ? (data.waterTemp * 9/5 + 32 | number:'1.0-0') : data.waterTemp }}°{{ config.useImperial ? 'F' : 'C' }}
+        </div>
       </div>
       <div class="stat-item">
         <div class="label">Voltage</div>

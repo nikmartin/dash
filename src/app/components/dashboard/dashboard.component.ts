@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { GpsService } from '../../services/gps';
 import { Obd2Service } from '../../services/obd2';
+import { SettingsService } from '../../services/settings';
 import { Observable } from 'rxjs';
 import { addIcons } from 'ionicons';
 import { bluetoothOutline, bluetoothSharp } from 'ionicons/icons';
@@ -18,10 +19,12 @@ import { ScanResult } from '@capacitor-community/bluetooth-le';
 export class DashboardComponent implements OnInit, OnDestroy {
   private gpsService = inject(GpsService);
   private obd2Service = inject(Obd2Service);
+  private settingsService = inject(SettingsService);
 
   public speed$: Observable<number> = this.gpsService.speed$;
   public obdData$ = this.obd2Service.data$;
   public isConnected$ = this.obd2Service.connected$;
+  public useImperial$ = this.settingsService.useImperial$;
   public devices: ScanResult[] = [];
   public showDeviceList = false;
 

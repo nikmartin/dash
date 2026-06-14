@@ -1,17 +1,19 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [DashboardComponent],
       providers: [
         provideHttpClient(),
+        provideZonelessChangeDetection(),
         provideRouter([])
       ]
     }).compileComponents();

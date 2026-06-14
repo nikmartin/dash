@@ -15,9 +15,8 @@ export class AppComponent {
   public appPages = [
     { title: 'Dashboard', url: '/dashboard', icon: 'speedometer' },
     { title: 'Settings', url: '/settings', icon: 'settings' },
-    
   ];
-  public labels = [];
+  public labels: string[] = [];
   constructor() {
     addIcons({settingsOutline, settingsSharp, speedometerOutline, speedometerSharp });
   }
