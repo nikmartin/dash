@@ -5,10 +5,10 @@
     </ion-buttons>
     <ion-title>Dashboard</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="scan()" *ngIf="(isConnected$ | async) === false">
+      <ion-button (click)="scan()" *ngIf="!isConnected()">
         <ion-icon slot="icon-only" name="bluetooth-outline"></ion-icon>
       </ion-button>
-      <ion-button (click)="disconnect()" *ngIf="isConnected$ | async" color="success">
+      <ion-button (click)="disconnect()" *ngIf="isConnected()" color="success">
         <ion-icon slot="icon-only" name="bluetooth"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -18,26 +18,30 @@
 <ion-content [fullscreen]="true">
   <div class="dashboard-container">
     <div class="main-gauge">
-      <div class="value">{{ speed$ | async }}</div>
-      <div class="unit">km/h</div>
+      <div class="value">
+        {{ useImperial() ? (speed() / 1.60934 | number:'1.0-0') : speed() }}
+      </div>
+      <div class="unit">{{ useImperial() ? 'mph' : 'km/h' }}</div>
     </div>
 
-    <div class="stats-grid" *ngIf="obdData$ | async as data">
+    <div class="stats-grid">
       <div class="stat-item">
         <div class="label">RPM</div>
-        <div class="value">{{ data.rpm }}</div>
+        <div class="value">{{ obdData().rpm }}</div>
       </div>
       <div class="stat-item">
         <div class="label">Water Temp</div>
-        <div class="value">{{ data.waterTemp }}°C</div>
+        <div class="value">
+          {{ useImperial() ? (obdData().waterTemp * 9/5 + 32 | number:'1.0-0') : obdData().waterTemp }}°{{ useImperial() ? 'F' : 'C' }}
+        </div>
       </div>
       <div class="stat-item">
         <div class="label">Voltage</div>
-        <div class="value">{{ data.voltage }}V</div>
+        <div class="value">{{ obdData().voltage }}V</div>
       </div>
       <div class="stat-item">
         <div class="label">Oil Pressure</div>
-        <div class="value">{{ data.oilPressure | number:'1.0-1' }} PSI</div>
+        <div class="value">{{ obdData().oilPressure | number:'1.0-1' }} PSI</div>
       </div>
     </div>
 
