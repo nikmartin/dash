@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Match your local Node version
+          node-version: '24' # Match your local Node version
           cache: 'npm'
 
       - name: Install Dependencies
@@ -31,5 +31,5 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist/YOUR_PROJECT_NAME/browser # Change this to your exact build output folder path
+          folder: www # Change this to your exact build output folder path
           branch: gh-pages # The branch the action will deploy to
