@@ -1,10 +1,10 @@
 {
   "configVersion": 1,
-  "timestamp": 1783090626014,
+  "timestamp": 1783092137718,
   "index": "/dash/index.html",
   "assetGroups": [
     {
-      "name": "app",
+      "name": "dash",
       "installMode": "prefetch",
       "updateMode": "prefetch",
       "cacheQueryOptions": {
