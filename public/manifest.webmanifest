@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "short_name": "app",
+  "name": "Dash",
+  "short_name": "dash",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
