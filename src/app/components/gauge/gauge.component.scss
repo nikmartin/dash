@@ -1,0 +1,8 @@
+.gauge-container {
+    display: flex;
+    justify-content: center;
+    /* Centers child horizontally */
+    width: 80vw;
+    height: 160px;
+    /* Cut roughly in half to remove blank bottom canvas margins */
+}

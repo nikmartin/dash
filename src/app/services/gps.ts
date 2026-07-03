@@ -18,6 +18,7 @@ export class GpsService {
     this.watchId = await Geolocation.watchPosition(
       {
         enableHighAccuracy: true,
+        interval: 1500
       },
       (position, err) => {
         if (err) {

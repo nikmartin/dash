@@ -7,13 +7,14 @@ import { SettingsService } from '../../services/settings';
 import { addIcons } from 'ionicons';
 import { bluetoothOutline, bluetoothSharp } from 'ionicons/icons';
 import { ScanResult } from '@capacitor-community/bluetooth-le';
+import { GaugeComponent } from '../gauge/gauge.component';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonButton, IonIcon],
+  imports: [CommonModule, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonButton, IonIcon, GaugeComponent],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   private gpsService = inject(GpsService);
@@ -58,3 +59,4 @@ export class DashboardComponent implements OnInit, OnDestroy {
     await this.obd2Service.disconnect();
   }
 }
+

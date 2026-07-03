@@ -9,21 +9,6 @@
   color: white;
 }
 
-.main-gauge {
-  text-align: center;
-  margin-bottom: 40px;
-
-  .value {
-    font-size: 120px;
-    font-weight: bold;
-    line-height: 1;
-  }
-
-  .unit {
-    font-size: 24px;
-    color: #888;
-  }
-}
 
 .stats-grid {
   display: grid;

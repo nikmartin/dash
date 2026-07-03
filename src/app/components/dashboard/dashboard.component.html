@@ -5,30 +5,26 @@
     </ion-buttons>
     <ion-title>Dashboard</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="scan()" *ngIf="!isConnected()">
+      @if (!isConnected()) {
+        <ion-button (click)="scan()">
         <ion-icon slot="icon-only" name="bluetooth-outline"></ion-icon>
       </ion-button>
-      <ion-button (click)="disconnect()" *ngIf="isConnected()" color="success">
+      } @else {
+        <ion-button (click)="disconnect()" color="success">
         <ion-icon slot="icon-only" name="bluetooth"></ion-icon>
       </ion-button>
+      }
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="dashboard-container">
-    <div class="main-gauge">
-      <div class="value">
-        {{ useImperial() ? (speed() / 1.60934 | number:'1.0-0') : speed() }}
-      </div>
-      <div class="unit">{{ useImperial() ? 'mph' : 'km/h' }}</div>
+    <div class="gauges-grid">
+      <app-gauge [value]="speed()" [max]="140" title="Speed"></app-gauge>
+      <app-gauge [value]="obdData().rpm" [max]="8000" title="RPM"></app-gauge>
     </div>
-
     <div class="stats-grid">
-      <div class="stat-item">
-        <div class="label">RPM</div>
-        <div class="value">{{ obdData().rpm }}</div>
-      </div>
       <div class="stat-item">
         <div class="label">Water Temp</div>
         <div class="value">
@@ -45,18 +41,23 @@
       </div>
     </div>
 
-    <div *ngIf="showDeviceList" class="device-list">
+    @if (showDeviceList) {
+      <div class="device-list">
       <ion-list>
-        <ion-item *ngFor="let result of devices" (click)="connect(result.device.deviceId)" button>
+          @for (result of devices; track result.device.deviceId) {
+            <ion-item (click)="connect(result.device.deviceId)" button>
           <ion-label>
             <h2>{{ result.device.name || 'Unknown Device' }}</h2>
             <p>{{ result.device.deviceId }}</p>
           </ion-label>
         </ion-item>
+          }
         <ion-item (click)="showDeviceList = false" button color="light">
           <ion-label>Cancel</ion-label>
         </ion-item>
       </ion-list>
     </div>
+    }
   </div>
 </ion-content>
+
