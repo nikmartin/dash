@@ -71,11 +71,19 @@ export class GaugeComponent implements OnChanges, AfterViewInit {
         {
           id: 'gaugeCenterText',
         afterDraw: (chart) => {
-          const { ctx, chartArea: { left, right, bottom } } = chart;
+          const { ctx, chartArea: { left, right, bottom, top } } = chart;
+          // Calculate center coordinates
+          const x = (left + right) / 2;
+          const y = bottom - (bottom - top) * 0.30; // Move text up: higher percentage of the arc height
           ctx.save();
+          // Text configuration
             ctx.textAlign = 'center';
-            ctx.font = '20px Arial';
-            ctx.fillText(`${this.value} ${this.metric}`, (left + right) / 2, bottom - 10);
+          ctx.textBaseline = 'middle';
+          ctx.font = 'bold 32px sans-serif'; // Larger and bolder
+          ctx.fillStyle = '#ffffff'; // Contrasting white for dark background
+
+          // Render text
+          ctx.fillText(`${this.value}`, x, y);
           ctx.restore();
         }
         },
@@ -125,3 +133,4 @@ export class GaugeComponent implements OnChanges, AfterViewInit {
       chartConfig);
   }
 }
+
