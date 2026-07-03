@@ -21,18 +21,26 @@ export class GaugeComponent implements OnChanges, AfterViewInit {
   @Input() min = 0;
   @Input() max = 100;
   @Input() value = 50;
+  @Input() metric = '';
   @Input() title = '';
 
-  chartOption: any = {};
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['min'] || changes['max'] || changes['value']) {
-      this.updateChartOption();
+    // If the chart exists, update the data rather than re-init
+    if (this.chart) {
+      if (changes['value'] || changes['min'] || changes['max']) {
+        this.updateChartData();
+      }
     }
   }
 
-  private updateChartOption() {
-    this.chartOption = {}
+  private updateChartData() {
+    // 1. Update the dataset values
+    this.chart.data.datasets[0].data = [this.value, this.max - this.value];
+
+    // 2. Tell Chart.js to re-render with the new data
+    this.chart.update('none'); // 'none' disables animation if it's too jittery
   }
+
   ngAfterViewInit(): void {
     this.onChartInit();
   }
@@ -59,27 +67,58 @@ export class GaugeComponent implements OnChanges, AfterViewInit {
         }
 
       },
-      plugins: [{
-        id: 'gaugeCenterText',
+      plugins: [
+        {
+          id: 'gaugeCenterText',
         afterDraw: (chart) => {
-          const { ctx, chartArea: { top, bottom, left, right } } = chart;
+          const { ctx, chartArea: { left, right, bottom } } = chart;
           ctx.save();
-
-          // Calculate center coordinates
-          const x = (left + right) / 2;
-          const y = bottom - 10; // Slightly adjusted upward to fit perfectly 
-
-          // Text configuration
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.font = 'bold 24px sans-serif';
-          ctx.fillStyle = '#333333';
-
-          // Render text
-          ctx.fillText(`${this.value}%`, x, y);
+            ctx.textAlign = 'center';
+            ctx.font = '20px Arial';
+            ctx.fillText(`${this.value} ${this.metric}`, (left + right) / 2, bottom - 10);
           ctx.restore();
         }
-      }],
+        },
+        {
+          id: 'analogNeedle',
+          afterDraw: (chart) => {
+            const { ctx, chartArea: { left, right, bottom } } = chart;
+            ctx.save();
+
+            // 1. Calculate needle angle based on percentage
+            const percentage = this.value / this.max;
+            const angle = (-Math.PI) + (percentage * Math.PI); // Half-circle math
+            const centerX = (left + right) / 2;
+            const centerY = bottom;
+            const radius = (right - left) / 2; // Length of needle
+
+            // 2. Setup "Lit" Needle Style
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#FF0000'; // The "glow" color
+            ctx.strokeStyle = '#FF0000';
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+
+            // 3. Draw Needle
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(
+              centerX + radius * Math.cos(angle),
+              centerY + radius * Math.sin(angle)
+            );
+            ctx.stroke();
+
+            // 4. Draw Center Pivot (The "Axle")
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#333';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+  }
+}
+      ],
     };
     this.chart = new Chart(
       this.chartCanvas.nativeElement,
