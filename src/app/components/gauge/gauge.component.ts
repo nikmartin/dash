@@ -53,14 +53,14 @@ export class GaugeComponent implements OnChanges, AfterViewInit {
       data: {
         datasets: [{
           data: [this.value, remainingValue],
-          backgroundColor: ['#36A2EB', '#E0E0E0'], // Progress vs Background color
+          backgroundColor: ['#3cd34e', '#E0E0E0'], // Progress vs Background color
           borderWidth: 0,
         }]
       },
       options: {
         rotation: -90, // Starts the gauge from the bottom left
         circumference: 180, // Makes it a half-circle (semi-donut)
-        cutout: '75%', // Controls the thickness of the gauge
+        cutout: '65%', // Controls the thickness of the gauge
         plugins: {
           legend: { display: false },
           tooltip: { enabled: false }
@@ -79,32 +79,33 @@ export class GaugeComponent implements OnChanges, AfterViewInit {
           // Text configuration
             ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.font = 'bold 32px sans-serif'; // Larger and bolder
+          ctx.font = 'bold 28px sans-serif'; // Larger and bolder
           ctx.fillStyle = '#ffffff'; // Contrasting white for dark background
 
           // Render text
-          ctx.fillText(`${this.value}`, x, y);
+          ctx.fillText(`${this.value} ${this.metric}`, x, y);
           ctx.restore();
         }
         },
         {
           id: 'analogNeedle',
           afterDraw: (chart) => {
-            const { ctx, chartArea: { left, right, bottom } } = chart;
+            const { ctx, chartArea: { left, right, bottom,top } } = chart;
             ctx.save();
 
             // 1. Calculate needle angle based on percentage
             const percentage = this.value / this.max;
             const angle = (-Math.PI) + (percentage * Math.PI); // Half-circle math
             const centerX = (left + right) / 2;
-            const centerY = bottom;
+            // const centerY = bottom;
+            const centerY = bottom - (bottom - top) *.2;
             const radius = (right - left) / 2; // Length of needle
 
             // 2. Setup "Lit" Needle Style
             ctx.shadowBlur = 15;
             ctx.shadowColor = '#FF0000'; // The "glow" color
             ctx.strokeStyle = '#FF0000';
-            ctx.lineWidth = 6;
+            ctx.lineWidth = 7;
             ctx.lineCap = 'round';
 
             // 3. Draw Needle
