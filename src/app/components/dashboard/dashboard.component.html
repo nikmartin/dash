@@ -21,7 +21,7 @@
 <ion-content [fullscreen]="true">
   <div class="dashboard-container">
     <div class="gauges-grid">
-      <app-gauge [value]="speed()" [max]="140" title="Speed" metric="MPH"></app-gauge>
+      <app-gauge [value]="useImperial() ? speed() * 0.621371 : speed()" [max]="140" title="Speed" metric="{{useImperial() ? 'MPH' : 'kMH'}}"></app-gauge>
       <app-gauge [value]="obdData().rpm" [max]="8000" title="RPM" metric="RPM"></app-gauge>
     </div>
     <div class="stats-grid">
