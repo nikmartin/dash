@@ -2,7 +2,7 @@
   "name": "dash",
   "version": "0.1.0",
   "author": "Nik Martin",
-  "homepage": "https://ionicframework.com/",
+  "homepage": "https://github.com/nikmartin/dash/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
