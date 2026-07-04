@@ -46,6 +46,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.showDeviceList = true;
   }
 
+  // Add a getter or a signal transform
+  get displaySpeed(): number {
+    const rawSpeed = this.useImperial() ? (this.speed() * 0.621371) : this.speed();
+    return Math.round(rawSpeed * 10) / 10; // Round to 1 decimal
+  }
+
   async connect(deviceId: string) {
     try {
       await this.obd2Service.connect(deviceId);
